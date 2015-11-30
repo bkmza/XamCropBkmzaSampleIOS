@@ -11,6 +11,7 @@ namespace XamCropBkmzaSample
    public class BCroppableView : UIView
    {
       List<BMarkerImageView> _markers;
+      bool isCroppedImageDisplayed = false;
 
       public WeakReference WeakParent;
 
@@ -56,26 +57,60 @@ namespace XamCropBkmzaSample
       public override void Draw (CGRect rect)
       {
          base.Draw (rect);
-
          using (CGContext g = UIGraphics.GetCurrentContext ())
          {
-            g.ClearRect (Frame);
+            if (!isCroppedImageDisplayed)
+            {
+               g.ClearRect (Frame);
 
-            //set up drawing attributes
-            g.SetLineWidth (10);
-            UIColor.Blue.SetFill ();
-            UIColor.Red.SetStroke ();
+               g.SetLineWidth (10);
+               UIColor.Blue.SetFill ();
+               UIColor.Red.SetStroke ();
 
-            //create geometry
-            var path = new CGPath ();
+               var path = new CGPath ();
+               path.AddLines (_markers.Select (x => x.Location).ToArray ());
+               path.CloseSubpath ();
 
-            path.AddLines (_markers.Select (x => x.Location).ToArray ());
-            path.CloseSubpath ();
-
-            //add geometry to graphics context and draw it
-            g.AddPath (path);
-            g.DrawPath (CGPathDrawingMode.FillStroke);
+               g.AddPath (path);
+               g.DrawPath (CGPathDrawingMode.FillStroke);
+            }
+            else
+            {
+               g.ClearRect (Frame);
+               var markers = _markers;
+               foreach (var marker in markers)
+               {
+                  marker.RemoveFromSuperview ();
+               }
+            }
          }
+      }
+
+      public void SetCroppedImage ()
+      {
+         var image = GetCroppedImage ();
+         InvokeOnMainThread (() =>
+         {
+            _parent.ImageView = new UIImageView (image) {
+               Frame = new CGRect (0, 0, image.Size.Width, image.Size.Height)
+            };
+         });
+         isCroppedImageDisplayed = true;
+      }
+
+      public UIImage GetCroppedImage ()
+      {
+         UIImageView imageView = _parent.ImageView;
+
+         CGSize size = imageView.Layer.Bounds.Size;
+         UIGraphics.BeginImageContextWithOptions (size, false, 0.0f);
+         imageView.Layer.RenderInContext (UIGraphics.GetCurrentContext ());
+
+         UIImage image = UIGraphics.GetImageFromCurrentImageContext ();
+
+         UIGraphics.EndImageContext ();
+
+         return image;
       }
 
       public void MaskImageView ()

@@ -40,7 +40,7 @@ namespace XamCropBkmzaSample
             {
                Center = _pan.LocationInView (_parent);
                Location = Center;
-               _parent.SetNeedsDisplay();
+               _parent.SetNeedsDisplay ();
             }
             else if (_pan.State == UIGestureRecognizerState.Ended)
             {
@@ -55,9 +55,11 @@ namespace XamCropBkmzaSample
          AddGestureRecognizer (_doubleTap);
       }
 
-      void Crop()
+      void Crop ()
       {
          _parent.MaskImageView ();
+         _parent.SetCroppedImage ();
+         _parent.SetNeedsDisplay ();
       }
 
       public CGPoint Location
