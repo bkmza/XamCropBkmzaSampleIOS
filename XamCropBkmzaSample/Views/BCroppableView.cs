@@ -5,6 +5,7 @@ using CoreGraphics;
 using System.Linq;
 using CoreAnimation;
 using XamCropBkmzaSample.ViewControllers;
+using CoreImage;
 
 namespace XamCropBkmzaSample
 {
@@ -12,6 +13,7 @@ namespace XamCropBkmzaSample
    {
       List<BMarkerImageView> _markers;
       bool isCroppedImageDisplayed = false;
+      const float M_PI = 3.14159265358979323846264338327950288f;
 
       public WeakReference WeakParent;
 
@@ -84,6 +86,28 @@ namespace XamCropBkmzaSample
                }
             }
          }
+      }
+
+      public void SetEnhancedImage ()
+      {
+         var image = GetCroppedImage ();
+
+         CIImage enhancedImage = new CIImage (image);
+         var transform = new CGAffineTransform (1F, .5F, .5F, 1F, 0F, 0F);
+//         transform.Rotate (-90 * (M_PI / 180));
+         var affineTransform = new CIAffineTransform () {
+            Image = enhancedImage,
+            Transform = transform
+         };
+         var output = affineTransform.OutputImage;
+         var context = CIContext.FromOptions (null);
+         var cgimage = context.CreateCGImage (output, output.Extent);
+         InvokeOnMainThread (() =>
+         {
+            _parent.ImageView.Image = UIImage.FromImage (output);
+         });
+
+         isCroppedImageDisplayed = true;
       }
 
       public void SetCroppedImage ()
