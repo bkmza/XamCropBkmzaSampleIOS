@@ -9,6 +9,7 @@
     <RootNamespace>XamCropBkmzaSample</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>XamCropBkmzaSample</AssemblyName>
+    <XamarinInsightsApiKey>1873ccd8255ad2e711e072322ba671a51f4c67ed</XamarinInsightsApiKey>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -79,6 +80,12 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
+    <Reference Include="Xamarin.Insights">
+      <HintPath>..\packages\Xamarin.Insights.1.10.6\lib\Xamarin.iOS10\Xamarin.Insights.dll</HintPath>
+    </Reference>
+    <Reference Include="PLCrashReporterUnifiedBinding">
+      <HintPath>..\packages\Xamarin.Insights.1.10.6\lib\Xamarin.iOS10\PLCrashReporterUnifiedBinding.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json" />
@@ -90,6 +97,7 @@
   <ItemGroup>
     <None Include="Info.plist" />
     <None Include="Entitlements.plist" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -98,6 +106,22 @@
     <Compile Include="ViewController.designer.cs">
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="ViewControllers\NavViewController.cs" />
+    <Compile Include="Views\CropperView.cs" />
+    <Compile Include="Views\BCroppableView.cs" />
+    <Compile Include="ViewControllers\CropperViewController.cs" />
+    <Compile Include="ViewControllers\BCroppableViewController.cs" />
+    <Compile Include="Views\BMarkerImageView.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+  <Import Project="..\packages\Xamarin.Insights.1.10.6\build\Xamarin.iOS10\Xamarin.Insights.targets" Condition="Exists('..\packages\Xamarin.Insights.1.10.6\build\Xamarin.iOS10\Xamarin.Insights.targets')" />
+  <ItemGroup>
+    <Folder Include="ViewControllers\" />
+    <Folder Include="Resources\Images\" />
+    <Folder Include="Views\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Images\test_image.jpg" />
+    <BundleResource Include="Resources\Images\icon_marker.png" />
+  </ItemGroup>
 </Project>

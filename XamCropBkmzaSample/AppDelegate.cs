@@ -1,5 +1,6 @@
 ﻿using Foundation;
 using UIKit;
+using XamCropBkmzaSample.ViewControllers;
 
 namespace XamCropBkmzaSample
 {
@@ -20,6 +21,8 @@ namespace XamCropBkmzaSample
       {
          // Override point for customization after application launch.
          // If not required for your application you can safely delete this method
+
+         Window.RootViewController = new NavViewController();
 
          return true;
       }

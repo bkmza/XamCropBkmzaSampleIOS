@@ -5,7 +5,7 @@ using XamCropBkmzaSample.Views;
 
 namespace XamCropBkmzaSample.ViewControllers
 {
-   public class CropViewController : UIViewController
+   public class CropperViewController : UIViewController
    {
       UIImageView imageView;
       CropperView cropperView;
@@ -13,7 +13,19 @@ namespace XamCropBkmzaSample.ViewControllers
       UIPinchGestureRecognizer pinch;
       UITapGestureRecognizer doubleTap;
 
-      public CropViewController ()
+      public WeakReference WeakParent;
+
+      BCroppableView _parent
+      {
+         get
+         {
+            if (WeakParent == null || !WeakParent.IsAlive)
+               return null;
+            return WeakParent.Target as BCroppableView;
+         }
+      }
+
+      public CropperViewController ()
       {
       }
 
