@@ -90,7 +90,8 @@ namespace XamCropBkmzaSample
 
       CGPoint PreparePoint (CGPoint point)
       {
-         return new CGPoint (point.X * _parent.ImageView.Image.Size.Width / UIScreen.MainScreen.Bounds.Width, _parent.ImageView.Image.Size.Height - point.Y * _parent.ImageView.Image.Size.Height / UIScreen.MainScreen.Bounds.Height);
+//         return point;
+         return new CGPoint (point.X * _parent.ImageView.Image.Size.Width / UIScreen.MainScreen.Bounds.Width, _parent.ImageView.Image.Size.Height - (point.Y * _parent.ImageView.Image.Size.Height / UIScreen.MainScreen.Bounds.Height));
       }
 
       public void SetEnhancedImage ()
@@ -101,17 +102,22 @@ namespace XamCropBkmzaSample
             {
                using (var dict = new NSMutableDictionary ())
                {
+                  var M_PI = 3.14159265358979323846264338327950288f;
+
                   dict.Add (key: new NSString ("inputTopLeft"), value: new CIVector (PreparePoint (_markers [0].Location)));
                   dict.Add (key: new NSString ("inputTopRight"), value: new CIVector (PreparePoint (_markers [1].Location)));
                   dict.Add (key: new NSString ("inputBottomLeft"), value: new CIVector (PreparePoint (_markers [3].Location)));
                   dict.Add (key: new NSString ("inputBottomRight"), value: new CIVector (PreparePoint (_markers [2].Location)));
 
                   using (var perspectiveCorrectedImage = ciImage.CreateByFiltering ("CIPerspectiveCorrection", dict))
-                  using (var ctx = CIContext.FromOptions (null))
-                  using (CGImage convertedCGImage = ctx.CreateCGImage (perspectiveCorrectedImage, perspectiveCorrectedImage.Extent))
-                  using (UIImage convertedUIImage = UIImage.FromImage (convertedCGImage))
                   {
-                     _parent.ImageView.Image = convertedUIImage;
+                     using (var ctx = CIContext.FromOptions (null))
+                     using (CGImage convertedCGImage = ctx.CreateCGImage (perspectiveCorrectedImage, perspectiveCorrectedImage.Extent))
+                     using (UIImage convertedUIImage = UIImage.FromImage (convertedCGImage))
+                     {
+                        _parent.ImageView.Image = convertedUIImage;
+                        _parent.ImageView.Transform = CGAffineTransform.MakeRotation(90 * (M_PI/180));
+                     }
                   }
                }
             });
