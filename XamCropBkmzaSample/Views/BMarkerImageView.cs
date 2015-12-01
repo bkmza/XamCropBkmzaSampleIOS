@@ -57,7 +57,7 @@ namespace XamCropBkmzaSample
 
       void Crop ()
       {
-         _parent.MaskImageView ();
+//         _parent.MaskImageView ();
 //         _parent.SetCroppedImage ();
          _parent.SetEnhancedImage ();
          _parent.SetNeedsDisplay ();

@@ -19,10 +19,12 @@ namespace XamCropBkmzaSample.ViewControllers
 
          View.BackgroundColor = UIColor.White;
 
-         using (var image = UIImage.FromFile ("Images/test_image.jpg"))
+         using (var image = UIImage.FromFile ("Images/test_image1.jpg"))
          {
-            ImageView = new UIImageView (new CGRect (0, 0, UIScreen.MainScreen.Bounds.Width, UIScreen.MainScreen.Bounds.Height));
-            ImageView.Image = image;
+            ImageView = new UIImageView (new CGRect (0, 0, UIScreen.MainScreen.Bounds.Width, UIScreen.MainScreen.Bounds.Height)) {
+//               ContentMode = UIViewContentMode.ScaleAspectFit,
+               Image = image
+            };
          }
 
          CropView = new BCroppableView (new WeakReference (this)) { Frame = ImageView.Frame };

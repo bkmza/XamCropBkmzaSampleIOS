@@ -6,6 +6,7 @@ using System.Linq;
 using CoreAnimation;
 using XamCropBkmzaSample.ViewControllers;
 using CoreImage;
+using Foundation;
 
 namespace XamCropBkmzaSample
 {
@@ -13,7 +14,6 @@ namespace XamCropBkmzaSample
    {
       List<BMarkerImageView> _markers;
       bool isCroppedImageDisplayed = false;
-      const float M_PI = 3.14159265358979323846264338327950288f;
 
       public WeakReference WeakParent;
 
@@ -88,24 +88,34 @@ namespace XamCropBkmzaSample
          }
       }
 
+      CGPoint PreparePoint (CGPoint point)
+      {
+         return new CGPoint (point.X * _parent.ImageView.Image.Size.Width / UIScreen.MainScreen.Bounds.Width, _parent.ImageView.Image.Size.Height - point.Y * _parent.ImageView.Image.Size.Height / UIScreen.MainScreen.Bounds.Height);
+      }
+
       public void SetEnhancedImage ()
       {
-         var image = GetCroppedImage ();
-
-         CIImage enhancedImage = new CIImage (image);
-         var transform = new CGAffineTransform (1F, .5F, .5F, 1F, 0F, 0F);
-//         transform.Rotate (-90 * (M_PI / 180));
-         var affineTransform = new CIAffineTransform () {
-            Image = enhancedImage,
-            Transform = transform
-         };
-         var output = affineTransform.OutputImage;
-         var context = CIContext.FromOptions (null);
-         var cgimage = context.CreateCGImage (output, output.Extent);
-         InvokeOnMainThread (() =>
+         using (CIImage ciImage = new CIImage (_parent.ImageView.Image))
          {
-            _parent.ImageView.Image = UIImage.FromImage (output);
-         });
+            InvokeOnMainThread (() =>
+            {
+               using (var dict = new NSMutableDictionary ())
+               {
+                  dict.Add (key: new NSString ("inputTopLeft"), value: new CIVector (PreparePoint (_markers [0].Location)));
+                  dict.Add (key: new NSString ("inputTopRight"), value: new CIVector (PreparePoint (_markers [1].Location)));
+                  dict.Add (key: new NSString ("inputBottomLeft"), value: new CIVector (PreparePoint (_markers [3].Location)));
+                  dict.Add (key: new NSString ("inputBottomRight"), value: new CIVector (PreparePoint (_markers [2].Location)));
+
+                  using (var perspectiveCorrectedImage = ciImage.CreateByFiltering ("CIPerspectiveCorrection", dict))
+                  using (var ctx = CIContext.FromOptions (null))
+                  using (CGImage convertedCGImage = ctx.CreateCGImage (perspectiveCorrectedImage, perspectiveCorrectedImage.Extent))
+                  using (UIImage convertedUIImage = UIImage.FromImage (convertedCGImage))
+                  {
+                     _parent.ImageView.Image = convertedUIImage;
+                  }
+               }
+            });
+         }
 
          isCroppedImageDisplayed = true;
       }

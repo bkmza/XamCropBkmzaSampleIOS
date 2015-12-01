@@ -121,7 +121,9 @@
     <Folder Include="Views\" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\Images\test_image.jpg" />
     <BundleResource Include="Resources\Images\icon_marker.png" />
+    <BundleResource Include="Resources\Images\test_image1.JPG" />
+    <BundleResource Include="Resources\Images\test_image0.jpg" />
+    <BundleResource Include="Resources\Images\test_image2.JPG" />
   </ItemGroup>
 </Project>
