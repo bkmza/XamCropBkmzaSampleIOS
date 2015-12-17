@@ -73,6 +73,8 @@ namespace XamCropBkmzaSample
          set
          {
             _location = value;
+            var fr = Frame;
+            Frame = new CGRect (value.X - fr.Width / 2, value.Y - fr.Height / 2, fr.Width, fr.Height);
             SetNeedsDisplay ();
          }
       }

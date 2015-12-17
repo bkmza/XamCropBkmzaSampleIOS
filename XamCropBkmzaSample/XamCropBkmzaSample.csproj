@@ -112,6 +112,8 @@
     <Compile Include="ViewControllers\CropperViewController.cs" />
     <Compile Include="ViewControllers\BCroppableViewController.cs" />
     <Compile Include="Views\BMarkerImageView.cs" />
+    <Compile Include="Extensions\PointExtension.cs" />
+    <Compile Include="Extensions\CGPointExtension.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Insights.1.10.6\build\Xamarin.iOS10\Xamarin.Insights.targets" Condition="Exists('..\packages\Xamarin.Insights.1.10.6\build\Xamarin.iOS10\Xamarin.Insights.targets')" />
@@ -119,11 +121,16 @@
     <Folder Include="ViewControllers\" />
     <Folder Include="Resources\Images\" />
     <Folder Include="Views\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Images\icon_marker.png" />
-    <BundleResource Include="Resources\Images\test_image1.JPG" />
     <BundleResource Include="Resources\Images\test_image0.jpg" />
+    <BundleResource Include="Resources\Images\test_image1.JPG" />
     <BundleResource Include="Resources\Images\test_image2.JPG" />
+    <BundleResource Include="Resources\Images\test_image4.JPG" />
+    <BundleResource Include="Resources\Images\test_image5.JPG" />
+    <BundleResource Include="Resources\Images\test_image6.JPG" />
+    <BundleResource Include="Resources\Images\test_image7.JPG" />
   </ItemGroup>
 </Project>

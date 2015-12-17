@@ -14,6 +14,7 @@ namespace XamCropBkmzaSample
    {
       List<BMarkerImageView> _markers;
       bool isCroppedImageDisplayed = false;
+      CIDetector detector;
 
       public WeakReference WeakParent;
 
@@ -90,8 +91,16 @@ namespace XamCropBkmzaSample
 
       CGPoint PreparePoint (CGPoint point)
       {
-//         return point;
-         return new CGPoint (point.X * _parent.ImageView.Image.Size.Width / UIScreen.MainScreen.Bounds.Width, _parent.ImageView.Image.Size.Height - (point.Y * _parent.ImageView.Image.Size.Height / UIScreen.MainScreen.Bounds.Height));
+         return new CGPoint ((float)(point.X * _parent.ImageView.Image.Size.Width / UIScreen.MainScreen.Bounds.Width),
+            (float)(_parent.ImageView.Image.Size.Height - (point.Y * _parent.ImageView.Image.Size.Height / UIScreen.MainScreen.Bounds.Height)));
+      }
+
+      CGPoint ConvertImageToScreen (CGPoint point)
+      {
+         var scaleW = _parent.ImageView.Image.Size.Width / UIScreen.MainScreen.Bounds.Width;
+         return new CGPoint (
+            point.X / scaleW,
+            (_parent.ImageView.Frame.Height - (point.Y / _parent.ImageView.Image.Size.Height * _parent.ImageView.Frame.Height)));
       }
 
       public void SetEnhancedImage ()
@@ -102,12 +111,15 @@ namespace XamCropBkmzaSample
             {
                using (var dict = new NSMutableDictionary ())
                {
-                  var M_PI = 3.14159265358979323846264338327950288f;
+//                  var topLeft = new CGPoint (PreparePoint (_markers [0].Location));
+//                  var topRight = new CGPoint (PreparePoint (_markers [1].Location));
+//                  var bottomRight = new CGPoint (PreparePoint (_markers [2].Location));
+//                  var bottomLeft = new CGPoint (PreparePoint (_markers [3].Location));
 
-                  dict.Add (key: new NSString ("inputTopLeft"), value: new CIVector (PreparePoint (_markers [0].Location)));
-                  dict.Add (key: new NSString ("inputTopRight"), value: new CIVector (PreparePoint (_markers [1].Location)));
-                  dict.Add (key: new NSString ("inputBottomLeft"), value: new CIVector (PreparePoint (_markers [3].Location)));
-                  dict.Add (key: new NSString ("inputBottomRight"), value: new CIVector (PreparePoint (_markers [2].Location)));
+                  dict.Add (key: new NSString ("inputTopLeft"), value: new CIVector (_currRect.TopLeft));
+                  dict.Add (key: new NSString ("inputTopRight"), value: new CIVector (_currRect.TopRight));
+                  dict.Add (key: new NSString ("inputBottomLeft"), value: new CIVector (_currRect.BottomLeft));
+                  dict.Add (key: new NSString ("inputBottomRight"), value: new CIVector (_currRect.BottomRight));
 
                   using (var perspectiveCorrectedImage = ciImage.CreateByFiltering ("CIPerspectiveCorrection", dict))
                   {
@@ -116,7 +128,7 @@ namespace XamCropBkmzaSample
                      using (UIImage convertedUIImage = UIImage.FromImage (convertedCGImage))
                      {
                         _parent.ImageView.Image = convertedUIImage;
-                        _parent.ImageView.Transform = CGAffineTransform.MakeRotation(90 * (M_PI/180));
+                        _parent.ImageView.Frame = new CGRect(0, 0, UIScreen.MainScreen.Bounds.Width, UIScreen.MainScreen.Bounds.Height);
                      }
                   }
                }
@@ -124,6 +136,48 @@ namespace XamCropBkmzaSample
          }
 
          isCroppedImageDisplayed = true;
+      }
+
+      CIRectangleFeature _currRect;
+
+      public void UseDetector ()
+      {
+         var options = new CIDetectorOptions {
+            Accuracy = FaceDetectorAccuracy.High,
+            AspectRatio = 1.41f
+         };
+
+         detector = CIDetector.CreateRectangleDetector (context: null, detectorOptions: options);
+
+         using (CIImage ciImage = new CIImage (_parent.ImageView.Image))
+         {
+            InvokeOnMainThread (() =>
+            {
+               using (var dict = new NSMutableDictionary ())
+               {
+                  var rectangles = detector.FeaturesInImage (ciImage);
+                  if (rectangles.Length > 0)
+                  {
+                     _currRect = (CIRectangleFeature)rectangles [0];
+
+                     var topLeft = ConvertImageToScreen (_currRect.TopLeft);
+                     var topRight = ConvertImageToScreen (_currRect.TopRight);
+                     var bottomRight = ConvertImageToScreen (_currRect.BottomRight);
+                     var bottomLeft = ConvertImageToScreen (_currRect.BottomLeft);
+
+                     dict.Add (key: new NSString ("inputTopLeft"), value: new CIVector (topLeft));
+                     dict.Add (key: new NSString ("inputTopRight"), value: new CIVector (topRight));
+                     dict.Add (key: new NSString ("inputBottomRight"), value: new CIVector (bottomRight));
+                     dict.Add (key: new NSString ("inputBottomLeft"), value: new CIVector (bottomLeft));
+
+                     _markers [0].Location = topLeft;
+                     _markers [1].Location = topRight;
+                     _markers [2].Location = bottomRight;
+                     _markers [3].Location = bottomLeft;
+                  }
+               }
+            });
+         }
       }
 
       public void SetCroppedImage ()
