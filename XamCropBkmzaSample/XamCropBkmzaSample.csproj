@@ -40,8 +40,9 @@
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchFloat32>true</MtouchFloat32>
     <MtouchUseSGen>true</MtouchUseSGen>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Developer: Ilya Usikov (67A9LMFA8U)</CodesignKey>
     <MtouchUseRefCounting>true</MtouchUseRefCounting>
+    <CodesignProvision>71040579-ab7e-42a4-84d4-dfb7110cd7b0</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>full</DebugType>
@@ -114,6 +115,12 @@
     <Compile Include="Views\BMarkerImageView.cs" />
     <Compile Include="Extensions\PointExtension.cs" />
     <Compile Include="Extensions\CGPointExtension.cs" />
+    <Compile Include="ViewControllers\BPreviewController.cs" />
+    <Compile Include="ViewControllers\ViewControllerBase.cs" />
+    <Compile Include="ViewControllers\TabBarControllerBase.cs" />
+    <Compile Include="ViewControllers\BTabPreviewViewController.cs" />
+    <Compile Include="Enums\ImageClarityType.cs" />
+    <Compile Include="Extensions\UIImageExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Insights.1.10.6\build\Xamarin.iOS10\Xamarin.Insights.targets" Condition="Exists('..\packages\Xamarin.Insights.1.10.6\build\Xamarin.iOS10\Xamarin.Insights.targets')" />
@@ -122,6 +129,7 @@
     <Folder Include="Resources\Images\" />
     <Folder Include="Views\" />
     <Folder Include="Extensions\" />
+    <Folder Include="Enums\" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Images\icon_marker.png" />

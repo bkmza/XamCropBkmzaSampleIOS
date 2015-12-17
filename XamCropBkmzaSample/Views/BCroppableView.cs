@@ -39,10 +39,10 @@ namespace XamCropBkmzaSample
 
          _markers = new List<BMarkerImageView> ();
 
-         nfloat leftX = UIScreen.MainScreen.Bounds.Width * 0.1f;
-         nfloat rightX = UIScreen.MainScreen.Bounds.Width - leftX;
-         nfloat topY = UIScreen.MainScreen.Bounds.Height * 0.1f;
-         nfloat bottomY = UIScreen.MainScreen.Bounds.Height - topY;
+         nfloat leftX = _parent.ImageView.Frame.Width * 0.1f;
+         nfloat rightX = _parent.ImageView.Frame.Width - leftX;
+         nfloat topY = _parent.ImageView.Frame.Height * 0.1f;
+         nfloat bottomY = _parent.ImageView.Frame.Height - topY;
 
          AddMarker (new CGPoint (leftX, topY));
          AddMarker (new CGPoint (rightX, topY));
@@ -89,18 +89,34 @@ namespace XamCropBkmzaSample
          }
       }
 
-      CGPoint PreparePoint (CGPoint point)
+      nfloat _scaleW
       {
-         return new CGPoint ((float)(point.X * _parent.ImageView.Image.Size.Width / UIScreen.MainScreen.Bounds.Width),
-            (float)(_parent.ImageView.Image.Size.Height - (point.Y * _parent.ImageView.Image.Size.Height / UIScreen.MainScreen.Bounds.Height)));
+         get
+         {
+            return _parent.ImageView.Image.Size.Width / _parent.ImageView.Frame.Width;
+         }
       }
 
-      CGPoint ConvertImageToScreen (CGPoint point)
+      nfloat _scaleH
       {
-         var scaleW = _parent.ImageView.Image.Size.Width / UIScreen.MainScreen.Bounds.Width;
+         get
+         {
+            return _parent.ImageView.Image.Size.Height / _parent.ImageView.Frame.Height;
+         }
+      }
+
+      CGPoint ConvertScreenToImageCoords (CGPoint point)
+      {
          return new CGPoint (
-            point.X / scaleW,
-            (_parent.ImageView.Frame.Height - (point.Y / _parent.ImageView.Image.Size.Height * _parent.ImageView.Frame.Height)));
+            point.X * _scaleW,
+            _parent.ImageView.Image.Size.Height - (point.Y * _scaleH));
+      }
+
+      CGPoint ConvertImageToScreenCoords (CGPoint point)
+      {
+         return new CGPoint (
+            point.X / _scaleW,
+            _parent.ImageView.Frame.Height - (point.Y / _scaleH));
       }
 
       public void SetEnhancedImage ()
@@ -111,15 +127,15 @@ namespace XamCropBkmzaSample
             {
                using (var dict = new NSMutableDictionary ())
                {
-//                  var topLeft = new CGPoint (PreparePoint (_markers [0].Location));
-//                  var topRight = new CGPoint (PreparePoint (_markers [1].Location));
-//                  var bottomRight = new CGPoint (PreparePoint (_markers [2].Location));
-//                  var bottomLeft = new CGPoint (PreparePoint (_markers [3].Location));
+                  var topLeft = new CGPoint (ConvertScreenToImageCoords (_markers [0].Location));
+                  var topRight = new CGPoint (ConvertScreenToImageCoords (_markers [1].Location));
+                  var bottomRight = new CGPoint (ConvertScreenToImageCoords (_markers [2].Location));
+                  var bottomLeft = new CGPoint (ConvertScreenToImageCoords (_markers [3].Location));
 
-                  dict.Add (key: new NSString ("inputTopLeft"), value: new CIVector (_currRect.TopLeft));
-                  dict.Add (key: new NSString ("inputTopRight"), value: new CIVector (_currRect.TopRight));
-                  dict.Add (key: new NSString ("inputBottomLeft"), value: new CIVector (_currRect.BottomLeft));
-                  dict.Add (key: new NSString ("inputBottomRight"), value: new CIVector (_currRect.BottomRight));
+                  dict.Add (key: new NSString ("inputTopLeft"), value: new CIVector (topLeft));
+                  dict.Add (key: new NSString ("inputTopRight"), value: new CIVector (topRight));
+                  dict.Add (key: new NSString ("inputBottomRight"), value: new CIVector (bottomRight));
+                  dict.Add (key: new NSString ("inputBottomLeft"), value: new CIVector (bottomLeft));
 
                   using (var perspectiveCorrectedImage = ciImage.CreateByFiltering ("CIPerspectiveCorrection", dict))
                   {
@@ -127,18 +143,25 @@ namespace XamCropBkmzaSample
                      using (CGImage convertedCGImage = ctx.CreateCGImage (perspectiveCorrectedImage, perspectiveCorrectedImage.Extent))
                      using (UIImage convertedUIImage = UIImage.FromImage (convertedCGImage))
                      {
-                        _parent.ImageView.Image = convertedUIImage;
-                        _parent.ImageView.Frame = new CGRect(0, 0, UIScreen.MainScreen.Bounds.Width, UIScreen.MainScreen.Bounds.Height);
+                        NSData imageData = convertedUIImage.AsPNG ();
+                        _encodedImage = imageData.GetBase64EncodedData (NSDataBase64EncodingOptions.None).ToString ();
+
+                        _parent.ShowViewController (new BPreviewController ( encodedImage: _encodedImage), this);
+
+//                        _parent.ImageView.Image = convertedUIImage;
+//                        var scaleW = convertedUIImage.Size.Width / UIScreen.MainScreen.Bounds.Width;
+//                        _parent.ImageView.Frame = new CGRect (0, 0, convertedUIImage.Size.Width / scaleW, convertedUIImage.Size.Height / scaleW);
                      }
                   }
                }
             });
          }
 
-         isCroppedImageDisplayed = true;
+         isCroppedImageDisplayed = false;
       }
 
       CIRectangleFeature _currRect;
+      string _encodedImage;
 
       public void UseDetector ()
       {
@@ -160,20 +183,10 @@ namespace XamCropBkmzaSample
                   {
                      _currRect = (CIRectangleFeature)rectangles [0];
 
-                     var topLeft = ConvertImageToScreen (_currRect.TopLeft);
-                     var topRight = ConvertImageToScreen (_currRect.TopRight);
-                     var bottomRight = ConvertImageToScreen (_currRect.BottomRight);
-                     var bottomLeft = ConvertImageToScreen (_currRect.BottomLeft);
-
-                     dict.Add (key: new NSString ("inputTopLeft"), value: new CIVector (topLeft));
-                     dict.Add (key: new NSString ("inputTopRight"), value: new CIVector (topRight));
-                     dict.Add (key: new NSString ("inputBottomRight"), value: new CIVector (bottomRight));
-                     dict.Add (key: new NSString ("inputBottomLeft"), value: new CIVector (bottomLeft));
-
-                     _markers [0].Location = topLeft;
-                     _markers [1].Location = topRight;
-                     _markers [2].Location = bottomRight;
-                     _markers [3].Location = bottomLeft;
+                     _markers [0].Location = ConvertImageToScreenCoords (_currRect.TopLeft);
+                     _markers [1].Location = ConvertImageToScreenCoords (_currRect.TopRight);
+                     _markers [2].Location = ConvertImageToScreenCoords (_currRect.BottomRight);
+                     _markers [3].Location = ConvertImageToScreenCoords (_currRect.BottomLeft);
                   }
                }
             });

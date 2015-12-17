@@ -4,7 +4,7 @@ using CoreGraphics;
 
 namespace XamCropBkmzaSample.ViewControllers
 {
-   public class BCroppableViewController : UIViewController
+   public class BCroppableViewController : ViewControllerBase
    {
       public UIImageView ImageView;
       public BCroppableView CropView;
@@ -13,24 +13,14 @@ namespace XamCropBkmzaSample.ViewControllers
       {
       }
 
-      public override void ViewWillAppear (bool animated)
-      {
-         base.ViewWillAppear (animated);
-
-         // Prevent views from showing under the navigation bar
-         this.EdgesForExtendedLayout = UIRectEdge.None;
-      }
-
       public override void ViewDidLoad ()
       {
          base.ViewDidLoad ();
 
-         View.BackgroundColor = UIColor.White;
-
-         using (var image = UIImage.FromFile ("Images/test_image7.JPG"))
+         using (var image = UIImage.FromFile ("Images/test_image6.JPG"))
          {
             var scaleW = image.Size.Width / UIScreen.MainScreen.Bounds.Width;
-            ImageView = new UIImageView (new CGRect (0, 0, UIScreen.MainScreen.Bounds.Width, image.Size.Height / scaleW)) {
+            ImageView = new UIImageView (new CGRect (0, 0, image.Size.Width / scaleW, image.Size.Height / scaleW)) {
                ContentMode = UIViewContentMode.ScaleAspectFit,
                Image = image
             };
