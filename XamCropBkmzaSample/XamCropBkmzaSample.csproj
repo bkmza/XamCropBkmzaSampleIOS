@@ -140,5 +140,16 @@
     <BundleResource Include="Resources\Images\test_image5.JPG" />
     <BundleResource Include="Resources\Images\test_image6.JPG" />
     <BundleResource Include="Resources\Images\test_image7.JPG" />
+    <BundleResource Include="Resources\Images\landscape_0006.JPG" />
+    <BundleResource Include="Resources\Images\landscape_0007.JPG" />
+    <BundleResource Include="Resources\Images\landscape_0008.JPG" />
+    <BundleResource Include="Resources\Images\landscape_0009.JPG" />
+    <BundleResource Include="Resources\Images\landscape_0010.JPG" />
+    <BundleResource Include="Resources\Images\landscape_0011.JPG" />
+    <BundleResource Include="Resources\Images\landscape_0012.JPG" />
+    <BundleResource Include="Resources\Images\landscape_0013.JPG" />
+    <BundleResource Include="Resources\Images\landscape_0014.JPG" />
+    <BundleResource Include="Resources\Images\landscape_0015.JPG" />
+    <BundleResource Include="Resources\Images\landscape_0016.JPG" />
   </ItemGroup>
 </Project>

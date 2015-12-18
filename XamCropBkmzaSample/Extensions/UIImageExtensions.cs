@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using CoreGraphics;
 using ObjCRuntime;
 using UIKit;
+using CoreImage;
 
 namespace XamCropBkmzaSample
 {
@@ -16,6 +17,44 @@ namespace XamCropBkmzaSample
          public uint width;
          public uint rowBytes;
       };
+
+      public static UIImage ApplySepiaFilter(this UIImage image)
+      {
+         var ciimage = new CIImage(image);
+         var hueAdjust = new CIHueAdjust();   // first filter
+         hueAdjust.Image = ciimage;
+         hueAdjust.Angle = 2.094f;
+         var sepia = new CISepiaTone();       // second filter
+         sepia.Image = hueAdjust.OutputImage; // output from last filter, input to this one
+         sepia.Intensity = 0.3f;
+         CIFilter color = new CIColorControls() { // third filter
+            Saturation = 2,
+            Brightness = 1,
+            Contrast = 3,
+            Image = sepia.OutputImage    // output from last filter, input to this one
+         };
+         var output = color.OutputImage;
+         var context = CIContext.FromOptions(null);
+         // ONLY when CreateCGImage is called do all the effects get rendered
+         var cgimage = context.CreateCGImage (output, output.Extent);
+         var ui = UIImage.FromImage (cgimage);
+
+         return ui;
+      }
+
+      public static UIImage ApplyFilter(this UIImage image, float brightness, float saturation, float contrast)
+      {
+         var colorCtrls = new CIColorControls { Image = CIImage.FromCGImage (image.CGImage) };
+         var context = CIContext.FromOptions (null);
+         // set the values
+         colorCtrls.Brightness = brightness;
+         colorCtrls.Saturation = saturation;
+         colorCtrls.Contrast = contrast;
+         // do the transformation
+         var outputImage = colorCtrls.OutputImage;
+         var result = context.CreateCGImage (outputImage, outputImage.Extent);
+         return UIImage.FromImage (result);
+      }
 
       [DllImport (Constants.AccelerateImageLibrary)]
       static extern int vImageBoxConvolve_ARGB8888 (ref vImage_Buffer src, ref vImage_Buffer dest, IntPtr tempBuffer, uint srcOffsetToROI_X, uint srcOffsetToROI_Y, uint kernel_height, uint kernel_width, byte[] backgroundColor, uint flags);

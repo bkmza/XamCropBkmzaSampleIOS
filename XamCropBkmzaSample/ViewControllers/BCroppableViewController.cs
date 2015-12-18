@@ -17,7 +17,7 @@ namespace XamCropBkmzaSample.ViewControllers
       {
          base.ViewDidLoad ();
 
-         using (var image = UIImage.FromFile ("Images/test_image6.JPG"))
+         using (var image = UIImage.FromFile ("Images/test_image4.JPG"))
          {
             var scaleW = image.Size.Width / UIScreen.MainScreen.Bounds.Width;
             ImageView = new UIImageView (new CGRect (0, 0, image.Size.Width / scaleW, image.Size.Height / scaleW)) {

@@ -32,17 +32,17 @@ namespace XamCropBkmzaSample
             TabBarItem = new UITabBarItem (UITabBarSystemItem.Bookmarks, 0),
          };
 
-         _tab2 = new BTabPreviewViewController (_encodedImage, ImageClarityType.BlackWhite) {
+         _tab2 = new BTabPreviewViewController (_encodedImage, ImageClarityType.ExtraSaturation) {
             Title = "BlackWhite",
             TabBarItem = new UITabBarItem (UITabBarSystemItem.Contacts, 1)
          };
 
-         _tab3 = new BTabPreviewViewController (_encodedImage, ImageClarityType.GrayShades) {
+         _tab3 = new BTabPreviewViewController (_encodedImage, ImageClarityType.ExtraContrast) {
             Title = "GrayShades",
             TabBarItem = new UITabBarItem (UITabBarSystemItem.Downloads, 2)
          };
 
-         _tab4 = new BTabPreviewViewController (_encodedImage, ImageClarityType.Contrast) {
+         _tab4 = new BTabPreviewViewController (_encodedImage, ImageClarityType.ExtraBrightness) {
             Title = "Contrast",
             TabBarItem = new UITabBarItem (UITabBarSystemItem.Favorites, 3)
          };
