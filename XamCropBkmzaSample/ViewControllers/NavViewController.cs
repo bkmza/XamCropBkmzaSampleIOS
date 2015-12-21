@@ -1,12 +1,12 @@
-﻿using System;
-using UIKit;
+﻿using UIKit;
 
 namespace XamCropBkmzaSample.ViewControllers
 {
    public class NavViewController : UINavigationController
    {
       public NavViewController ()
-         :base (new BCroppableViewController())
+         :base (new StartViewController())
+//         :base (new BCroppableViewController(null))
       {
 
       }

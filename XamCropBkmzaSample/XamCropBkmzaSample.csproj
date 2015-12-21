@@ -69,12 +69,13 @@
     <MtouchArch>ARMv7, ARM64</MtouchArch>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchFloat32>true</MtouchFloat32>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Developer: Ilya Usikov (67A9LMFA8U)</CodesignKey>
     <DeviceSpecificBuild>true</DeviceSpecificBuild>
     <MtouchDebug>true</MtouchDebug>
     <MtouchUseSGen>true</MtouchUseSGen>
     <MtouchUseRefCounting>true</MtouchUseRefCounting>
     <MtouchProfiling>true</MtouchProfiling>
+    <CodesignProvision>71040579-ab7e-42a4-84d4-dfb7110cd7b0</CodesignProvision>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -121,6 +122,8 @@
     <Compile Include="ViewControllers\BTabPreviewViewController.cs" />
     <Compile Include="Enums\ImageClarityType.cs" />
     <Compile Include="Extensions\UIImageExtensions.cs" />
+    <Compile Include="ViewControllers\StartViewController.cs" />
+    <Compile Include="Helpers\Camera.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Insights.1.10.6\build\Xamarin.iOS10\Xamarin.Insights.targets" Condition="Exists('..\packages\Xamarin.Insights.1.10.6\build\Xamarin.iOS10\Xamarin.Insights.targets')" />
@@ -130,26 +133,19 @@
     <Folder Include="Views\" />
     <Folder Include="Extensions\" />
     <Folder Include="Enums\" />
+    <Folder Include="Helpers\" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Images\icon_marker.png" />
-    <BundleResource Include="Resources\Images\test_image0.jpg" />
     <BundleResource Include="Resources\Images\test_image1.JPG" />
     <BundleResource Include="Resources\Images\test_image2.JPG" />
     <BundleResource Include="Resources\Images\test_image4.JPG" />
     <BundleResource Include="Resources\Images\test_image5.JPG" />
     <BundleResource Include="Resources\Images\test_image6.JPG" />
     <BundleResource Include="Resources\Images\test_image7.JPG" />
-    <BundleResource Include="Resources\Images\landscape_0006.JPG" />
-    <BundleResource Include="Resources\Images\landscape_0007.JPG" />
-    <BundleResource Include="Resources\Images\landscape_0008.JPG" />
     <BundleResource Include="Resources\Images\landscape_0009.JPG" />
-    <BundleResource Include="Resources\Images\landscape_0010.JPG" />
     <BundleResource Include="Resources\Images\landscape_0011.JPG" />
     <BundleResource Include="Resources\Images\landscape_0012.JPG" />
     <BundleResource Include="Resources\Images\landscape_0013.JPG" />
-    <BundleResource Include="Resources\Images\landscape_0014.JPG" />
-    <BundleResource Include="Resources\Images\landscape_0015.JPG" />
-    <BundleResource Include="Resources\Images\landscape_0016.JPG" />
   </ItemGroup>
 </Project>

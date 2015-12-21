@@ -146,7 +146,7 @@ namespace XamCropBkmzaSample
                         NSData imageData = convertedUIImage.AsPNG ();
                         _encodedImage = imageData.GetBase64EncodedData (NSDataBase64EncodingOptions.None).ToString ();
 
-                        _parent.ShowViewController (new BPreviewController ( encodedImage: _encodedImage), this);
+                        _parent.ShowViewController (new BPreviewController (encodedImage: _encodedImage), this);
 
 //                        _parent.ImageView.Image = convertedUIImage;
 //                        var scaleW = convertedUIImage.Size.Width / UIScreen.MainScreen.Bounds.Width;
@@ -178,7 +178,7 @@ namespace XamCropBkmzaSample
             {
                using (var dict = new NSMutableDictionary ())
                {
-                  var rectangles = detector.FeaturesInImage (ciImage);
+                  var rectangles = detector.FeaturesInImage (ciImage, GetExifOrientation (_parent.ImageView.Image));
                   if (rectangles.Length > 0)
                   {
                      _currRect = (CIRectangleFeature)rectangles [0];
@@ -191,6 +191,41 @@ namespace XamCropBkmzaSample
                }
             });
          }
+      }
+
+      CIImageOrientation GetExifOrientation (UIImage image)
+      {
+         CIImageOrientation orientation = CIImageOrientation.TopLeft;
+         switch (image.Orientation)
+         {
+            case UIImageOrientation.Up:
+               orientation = CIImageOrientation.TopLeft;
+               break;
+            case UIImageOrientation.Down:
+               orientation = CIImageOrientation.BottomRight;
+               break;
+            case UIImageOrientation.Left:
+               orientation = CIImageOrientation.LeftBottom;
+               break;
+            case UIImageOrientation.Right:
+               orientation = CIImageOrientation.RightTop;
+               break;
+            case UIImageOrientation.UpMirrored:
+               orientation = CIImageOrientation.TopRight;
+               break;
+            case UIImageOrientation.DownMirrored:
+               orientation = CIImageOrientation.BottomLeft;
+               break;
+            case UIImageOrientation.LeftMirrored:
+               orientation = CIImageOrientation.LeftTop;
+               break;
+            case UIImageOrientation.RightMirrored:
+               orientation = CIImageOrientation.RightBottom;
+               break;
+            default:
+               break;
+         }
+         return orientation;
       }
 
       public void SetCroppedImage ()

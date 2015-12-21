@@ -1,6 +1,7 @@
 ﻿using System;
-using UIKit;
 using CoreGraphics;
+using Foundation;
+using UIKit;
 
 namespace XamCropBkmzaSample.ViewControllers
 {
@@ -8,18 +9,24 @@ namespace XamCropBkmzaSample.ViewControllers
    {
       public UIImageView ImageView;
       public BCroppableView CropView;
+      string _encodedImage;
 
-      public BCroppableViewController ()
+      public BCroppableViewController (string encodedImage)
       {
+         _encodedImage = encodedImage;
       }
 
       public override void ViewDidLoad ()
       {
          base.ViewDidLoad ();
 
-         using (var image = UIImage.FromFile ("Images/test_image4.JPG"))
+//         using (var image = UIImage.FromFile ("Images/test_image1.JPG"))
+         var bytes = Convert.FromBase64String (_encodedImage);
+         var imageData = NSData.FromArray (bytes);
+         using (var image = UIImage.LoadFromData (imageData))
          {
             var scaleW = image.Size.Width / UIScreen.MainScreen.Bounds.Width;
+
             ImageView = new UIImageView (new CGRect (0, 0, image.Size.Width / scaleW, image.Size.Height / scaleW)) {
                ContentMode = UIViewContentMode.ScaleAspectFit,
                Image = image
