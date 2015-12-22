@@ -27,6 +27,29 @@ using Foundation;
 
 namespace XamCropBkmzaSample
 {
+   public class BImagePickerController : UIImagePickerController
+   {
+      public BImagePickerController () : base ()
+      {
+         
+      }
+
+      public override bool ShouldAutorotate ()
+      {
+         return false;
+      }
+
+      public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations ()
+      {
+         return UIInterfaceOrientationMask.Portrait;
+      }
+
+      public override bool ShouldAutorotateToInterfaceOrientation (UIInterfaceOrientation toInterfaceOrientation)
+      {
+         return toInterfaceOrientation == UIInterfaceOrientation.Portrait;
+      }
+   }
+
    public static class Camera
    {
       static UIImagePickerController picker;
@@ -37,31 +60,53 @@ namespace XamCropBkmzaSample
          if (picker != null)
             return;
 
-         picker = new UIImagePickerController ();
+         picker = new BImagePickerController ();
          picker.Delegate = new CameraDelegate ();
       }
 
       class CameraDelegate : UIImagePickerControllerDelegate
       {
-         public override void FinishedPickingMedia (UIImagePickerController picker, NSDictionary info)
+         public override void FinishedPickingMedia (UIImagePickerController picker, NSDictionary imageInfo)
          {
             var cb = _callback;
             _callback = null;
 
+            UIImage tmpImage = imageInfo.ValueForKey (UIImagePickerController.OriginalImage) as UIImage;
+//            NSDictionary tmpInfo = (NSDictionary)imageInfo.MutableCopy ();
+//            NSDictionary metaData = (NSDictionary)tmpInfo.ValueForKey (UIImagePickerController.MediaMetadata).MutableCopy ();
+//
+//            metaData.SetValueForKey (new NSNumber (0f), new NSString ("Orientation"));
+//            tmpInfo.SetValueForKey (tmpImage, UIImagePickerController.OriginalImage);
+//            tmpInfo.SetValueForKey (metaData, UIImagePickerController.MediaMetadata);
+//            imageInfo = tmpInfo;
+//
+//            UIImage qqq = imageInfo.ValueForKey (UIImagePickerController.OriginalImage) as UIImage;
+//
             picker.DismissModalViewController (true);
             if (cb != null)
             {
-               cb (info);
+               cb (imageInfo);
             }
+         }
+
+         public override UIInterfaceOrientationMask SupportedInterfaceOrientations (UINavigationController navigationController)
+         {
+            return UIInterfaceOrientationMask.Portrait;
+         }
+
+         public override UIInterfaceOrientation GetPreferredInterfaceOrientation (UINavigationController navigationController)
+         {
+            return UIInterfaceOrientation.Portrait;
          }
       }
 
       static WeakReference _weakParent;
+
       static UIViewController Parent
       {
          get
          {
-            if (_weakParent ==null || !_weakParent.IsAlive)
+            if (_weakParent == null || !_weakParent.IsAlive)
                return null;
             return _weakParent.Target as UIViewController;
          }

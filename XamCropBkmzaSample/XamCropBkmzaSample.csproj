@@ -147,5 +147,18 @@
     <BundleResource Include="Resources\Images\landscape_0011.JPG" />
     <BundleResource Include="Resources\Images\landscape_0012.JPG" />
     <BundleResource Include="Resources\Images\landscape_0013.JPG" />
+    <BundleResource Include="Resources\Images\IMG_0050_LANDSCAPE.JPG" />
+    <BundleResource Include="Resources\Images\IMG_0050_PORTRAIT.JPG" />
+    <BundleResource Include="Resources\Images\IMG_0057_PORTRAIT.JPG" />
+    <BundleResource Include="Resources\Images\IMG_0059_PORTRAIT.JPG" />
+    <BundleResource Include="Resources\Images\IMG_0058_PORTRAIT.JPG" />
+    <BundleResource Include="Resources\Images\IMG_0060_PORTRAIT.JPG" />
+    <BundleResource Include="Resources\Images\IMG_0061_PORTRAIT.JPG" />
+    <BundleResource Include="Resources\Images\IMG_0063_PORTRAIT.JPG" />
+    <BundleResource Include="Resources\Images\IMG_0065_PORTRAIT.JPG" />
+    <BundleResource Include="Resources\Images\IMG_0064_PORTRAIT.JPG" />
+    <BundleResource Include="Resources\Images\IMG_0062_PORTRAIT.JPG" />
+    <BundleResource Include="Resources\Images\IMG_0066_PORTRAIT.JPG" />
+    <BundleResource Include="Resources\Images\icon_tab.png" />
   </ItemGroup>
 </Project>

@@ -2,7 +2,6 @@
 using CoreGraphics;
 using Foundation;
 using UIKit;
-using CoreImage;
 
 namespace XamCropBkmzaSample
 {
@@ -47,9 +46,10 @@ namespace XamCropBkmzaSample
                break;
          }
 
-         var scaleW = image.Size.Width / UIScreen.MainScreen.Bounds.Width;
+         image = new UIImage (image.CGImage, 1, UIImageOrientation.Right);
+         var scale = image.Size.Width / UIScreen.MainScreen.Bounds.Width;
 
-         _previewImageView = new UIImageView (new CGRect (0, 0, image.Size.Width / scaleW, image.Size.Height / scaleW)) {
+         _previewImageView = new UIImageView (new CGRect (0, 0, image.Size.Width / scale, image.Size.Height / scale)) {
             ContentMode = UIViewContentMode.ScaleAspectFit,
             Image = image
          };

@@ -89,7 +89,7 @@ namespace XamCropBkmzaSample
          }
       }
 
-      nfloat _scaleW
+      nfloat _scale
       {
          get
          {
@@ -97,26 +97,20 @@ namespace XamCropBkmzaSample
          }
       }
 
-      nfloat _scaleH
-      {
-         get
-         {
-            return _parent.ImageView.Image.Size.Height / _parent.ImageView.Frame.Height;
-         }
-      }
-
       CGPoint ConvertScreenToImageCoords (CGPoint point)
       {
-         return new CGPoint (
-            point.X * _scaleW,
-            _parent.ImageView.Image.Size.Height - (point.Y * _scaleH));
+         var cgPoint = new CGPoint (
+                          point.Y * _scale,
+                          /*_parent.ImageView.Image.Size.Height - */(point.X * _scale));
+         return new CGPoint (cgPoint.X, cgPoint.Y);
       }
 
       CGPoint ConvertImageToScreenCoords (CGPoint point)
       {
-         return new CGPoint (
-            point.X / _scaleW,
-            _parent.ImageView.Frame.Height - (point.Y / _scaleH));
+         var cgPoint = new CGPoint (
+                          point.Y / _scale,
+            /*_parent.ImageView.Frame.Height - */(point.X / _scale));
+         return cgPoint;
       }
 
       public void SetEnhancedImage ()
@@ -143,7 +137,7 @@ namespace XamCropBkmzaSample
                      using (CGImage convertedCGImage = ctx.CreateCGImage (perspectiveCorrectedImage, perspectiveCorrectedImage.Extent))
                      using (UIImage convertedUIImage = UIImage.FromImage (convertedCGImage))
                      {
-                        NSData imageData = convertedUIImage.AsPNG ();
+                        NSData imageData = convertedUIImage.AsJPEG ();
                         _encodedImage = imageData.GetBase64EncodedData (NSDataBase64EncodingOptions.None).ToString ();
 
                         _parent.ShowViewController (new BPreviewController (encodedImage: _encodedImage), this);
@@ -172,13 +166,14 @@ namespace XamCropBkmzaSample
 
          detector = CIDetector.CreateRectangleDetector (context: null, detectorOptions: options);
 
-         using (CIImage ciImage = new CIImage (_parent.ImageView.Image))
+         using (CIImage ciImage = new CIImage (_parent.GetStrippedExifImage ()))
          {
             InvokeOnMainThread (() =>
             {
                using (var dict = new NSMutableDictionary ())
                {
-                  var rectangles = detector.FeaturesInImage (ciImage, GetExifOrientation (_parent.ImageView.Image));
+                  var orient = GetExifOrientation (_parent.GetStrippedExifImage ());
+                  var rectangles = detector.FeaturesInImage (ciImage, orient);
                   if (rectangles.Length > 0)
                   {
                      _currRect = (CIRectangleFeature)rectangles [0];
@@ -195,6 +190,9 @@ namespace XamCropBkmzaSample
 
       CIImageOrientation GetExifOrientation (UIImage image)
       {
+//         return CIImageOrientation.TopLeft;
+
+         // for other cases
          CIImageOrientation orientation = CIImageOrientation.TopLeft;
          switch (image.Orientation)
          {

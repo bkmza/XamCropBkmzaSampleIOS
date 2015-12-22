@@ -20,7 +20,7 @@ namespace XamCropBkmzaSample.ViewControllers
       {
          base.ViewDidLoad ();
 
-//         using (var image = UIImage.FromFile ("Images/test_image1.JPG"))
+//         using (var image = UIImage.FromFile ("Images/IMG_0063_PORTRAIT.JPG"))
          var bytes = Convert.FromBase64String (_encodedImage);
          var imageData = NSData.FromArray (bytes);
          using (var image = UIImage.LoadFromData (imageData))
@@ -38,6 +38,12 @@ namespace XamCropBkmzaSample.ViewControllers
          View.AddSubviews (ImageView, CropView);
 
          CropView.UseDetector ();
+      }
+
+      public UIImage GetStrippedExifImage()
+      {
+         UIImage image = ImageView.Image;
+         return new UIImage (image.CGImage, 1, UIImageOrientation.Up);
       }
    }
 }

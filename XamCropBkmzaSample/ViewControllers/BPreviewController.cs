@@ -1,7 +1,6 @@
 ﻿using System;
 using Foundation;
 using UIKit;
-using CoreGraphics;
 
 namespace XamCropBkmzaSample
 {
@@ -29,22 +28,22 @@ namespace XamCropBkmzaSample
 
          _tab1 = new BTabPreviewViewController (_encodedImage, ImageClarityType.Default) {
             Title = "Default",
-            TabBarItem = new UITabBarItem (UITabBarSystemItem.Bookmarks, 0),
+            TabBarItem = new UITabBarItem ("Default", UIImage.FromBundle ("Images/icon_tab.png"), 0)
          };
 
          _tab2 = new BTabPreviewViewController (_encodedImage, ImageClarityType.ExtraSaturation) {
             Title = "BlackWhite",
-            TabBarItem = new UITabBarItem (UITabBarSystemItem.Contacts, 1)
+            TabBarItem = new UITabBarItem ("Saturation", UIImage.FromBundle ("Images/icon_tab.png"), 1)
          };
 
          _tab3 = new BTabPreviewViewController (_encodedImage, ImageClarityType.ExtraContrast) {
             Title = "GrayShades",
-            TabBarItem = new UITabBarItem (UITabBarSystemItem.Downloads, 2)
+            TabBarItem = new UITabBarItem ("Contrast", UIImage.FromBundle ("Images/icon_tab.png"), 2)
          };
 
          _tab4 = new BTabPreviewViewController (_encodedImage, ImageClarityType.ExtraBrightness) {
             Title = "Contrast",
-            TabBarItem = new UITabBarItem (UITabBarSystemItem.Favorites, 3)
+            TabBarItem = new UITabBarItem ("Brightness", UIImage.FromBundle ("Images/icon_tab.png"), 3)
          };
 
          ViewControllers = new[] { _tab1, _tab2, _tab3, _tab4 };
