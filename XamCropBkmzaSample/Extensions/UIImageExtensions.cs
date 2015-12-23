@@ -254,7 +254,8 @@ namespace XamCropBkmzaSample
          if (height > UIScreen.MainScreen.Bounds.Height)
          {
             const int tabBarHeight = 49;
-            scale = image.Size.Height / (UIScreen.MainScreen.Bounds.Height - tabBarHeight);
+            const int headerHeight = 64;
+            scale = image.Size.Height / (UIScreen.MainScreen.Bounds.Height - tabBarHeight - headerHeight);
             width = image.Size.Width / scale;
             height = image.Size.Height / scale;
          }
