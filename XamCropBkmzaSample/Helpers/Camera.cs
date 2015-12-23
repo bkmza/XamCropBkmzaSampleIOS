@@ -71,17 +71,6 @@ namespace XamCropBkmzaSample
             var cb = _callback;
             _callback = null;
 
-            UIImage tmpImage = imageInfo.ValueForKey (UIImagePickerController.OriginalImage) as UIImage;
-//            NSDictionary tmpInfo = (NSDictionary)imageInfo.MutableCopy ();
-//            NSDictionary metaData = (NSDictionary)tmpInfo.ValueForKey (UIImagePickerController.MediaMetadata).MutableCopy ();
-//
-//            metaData.SetValueForKey (new NSNumber (0f), new NSString ("Orientation"));
-//            tmpInfo.SetValueForKey (tmpImage, UIImagePickerController.OriginalImage);
-//            tmpInfo.SetValueForKey (metaData, UIImagePickerController.MediaMetadata);
-//            imageInfo = tmpInfo;
-//
-//            UIImage qqq = imageInfo.ValueForKey (UIImagePickerController.OriginalImage) as UIImage;
-//
             picker.DismissModalViewController (true);
             if (cb != null)
             {

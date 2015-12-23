@@ -69,13 +69,13 @@
     <MtouchArch>ARMv7, ARM64</MtouchArch>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchFloat32>true</MtouchFloat32>
-    <CodesignKey>iPhone Developer: Ilya Usikov (67A9LMFA8U)</CodesignKey>
+    <CodesignKey>iPhone Distribution: Coherent Solutions (9NVSBC8JNJ)</CodesignKey>
     <DeviceSpecificBuild>true</DeviceSpecificBuild>
     <MtouchDebug>true</MtouchDebug>
     <MtouchUseSGen>true</MtouchUseSGen>
     <MtouchUseRefCounting>true</MtouchUseRefCounting>
     <MtouchProfiling>true</MtouchProfiling>
-    <CodesignProvision>71040579-ab7e-42a4-84d4-dfb7110cd7b0</CodesignProvision>
+    <CodesignProvision>3339f8d4-721a-4a99-94b8-88e101e81765</CodesignProvision>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -137,28 +137,6 @@
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Images\icon_marker.png" />
-    <BundleResource Include="Resources\Images\test_image1.JPG" />
-    <BundleResource Include="Resources\Images\test_image2.JPG" />
-    <BundleResource Include="Resources\Images\test_image4.JPG" />
-    <BundleResource Include="Resources\Images\test_image5.JPG" />
-    <BundleResource Include="Resources\Images\test_image6.JPG" />
-    <BundleResource Include="Resources\Images\test_image7.JPG" />
-    <BundleResource Include="Resources\Images\landscape_0009.JPG" />
-    <BundleResource Include="Resources\Images\landscape_0011.JPG" />
-    <BundleResource Include="Resources\Images\landscape_0012.JPG" />
-    <BundleResource Include="Resources\Images\landscape_0013.JPG" />
-    <BundleResource Include="Resources\Images\IMG_0050_LANDSCAPE.JPG" />
-    <BundleResource Include="Resources\Images\IMG_0050_PORTRAIT.JPG" />
-    <BundleResource Include="Resources\Images\IMG_0057_PORTRAIT.JPG" />
-    <BundleResource Include="Resources\Images\IMG_0059_PORTRAIT.JPG" />
-    <BundleResource Include="Resources\Images\IMG_0058_PORTRAIT.JPG" />
-    <BundleResource Include="Resources\Images\IMG_0060_PORTRAIT.JPG" />
-    <BundleResource Include="Resources\Images\IMG_0061_PORTRAIT.JPG" />
-    <BundleResource Include="Resources\Images\IMG_0063_PORTRAIT.JPG" />
-    <BundleResource Include="Resources\Images\IMG_0065_PORTRAIT.JPG" />
-    <BundleResource Include="Resources\Images\IMG_0064_PORTRAIT.JPG" />
-    <BundleResource Include="Resources\Images\IMG_0062_PORTRAIT.JPG" />
-    <BundleResource Include="Resources\Images\IMG_0066_PORTRAIT.JPG" />
     <BundleResource Include="Resources\Images\icon_tab.png" />
   </ItemGroup>
 </Project>

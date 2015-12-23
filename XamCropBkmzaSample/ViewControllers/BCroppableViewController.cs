@@ -20,16 +20,16 @@ namespace XamCropBkmzaSample.ViewControllers
       {
          base.ViewDidLoad ();
 
-//         using (var image = UIImage.FromFile ("Images/IMG_0063_PORTRAIT.JPG"))
+//         using (var image = UIImage.FromFile ("Images/IMG_0066_PORTRAIT.JPG"))
+//         using (var orientedImage = FixOrientation (image))
          var bytes = Convert.FromBase64String (_encodedImage);
          var imageData = NSData.FromArray (bytes);
          using (var image = UIImage.LoadFromData (imageData))
+         using (var orientedImage = FixOrientation (image))
          {
-            var scaleW = image.Size.Width / UIScreen.MainScreen.Bounds.Width;
-
-            ImageView = new UIImageView (new CGRect (0, 0, image.Size.Width / scaleW, image.Size.Height / scaleW)) {
+            ImageView = new UIImageView (new CGRect (new CGPoint (0, 0), orientedImage.ScreenSize ())) {
                ContentMode = UIViewContentMode.ScaleAspectFit,
-               Image = image
+               Image = orientedImage
             };
          }
 
@@ -40,10 +40,76 @@ namespace XamCropBkmzaSample.ViewControllers
          CropView.UseDetector ();
       }
 
-      public UIImage GetStrippedExifImage()
+      UIImage FixOrientation (UIImage image)
       {
-         UIImage image = ImageView.Image;
-         return new UIImage (image.CGImage, 1, UIImageOrientation.Up);
+         if (image.Orientation == UIImageOrientation.Up)
+            return image;
+
+         CGAffineTransform transform = CGAffineTransform.MakeIdentity ();
+
+         switch (image.Orientation)
+         {
+            case UIImageOrientation.Down:
+            case UIImageOrientation.DownMirrored:
+               transform = CGAffineTransform.Translate (transform, image.Size.Width, image.Size.Height);
+               transform = CGAffineTransform.Rotate (transform, (nfloat)(Math.PI));
+               break;
+            case UIImageOrientation.Left:
+            case UIImageOrientation.LeftMirrored:
+               transform = CGAffineTransform.Translate (transform, image.Size.Width, 0);
+               transform = CGAffineTransform.Rotate (transform, (nfloat)(Math.PI / 2));
+               break;
+            case UIImageOrientation.Right:
+            case UIImageOrientation.RightMirrored:
+               transform = CGAffineTransform.Translate (transform, 0, image.Size.Height);
+               transform = CGAffineTransform.Rotate (transform, (nfloat)(-1 * Math.PI / 2));
+               break;
+            case UIImageOrientation.Up:
+            case UIImageOrientation.UpMirrored:
+               break;
+         }
+
+         switch (image.Orientation)
+         {
+            case UIImageOrientation.UpMirrored:
+            case UIImageOrientation.DownMirrored:
+               transform = CGAffineTransform.Translate (transform, image.Size.Width, 0);
+               transform = CGAffineTransform.Scale (transform, -1, 1);
+               break;
+            case UIImageOrientation.LeftMirrored:
+            case UIImageOrientation.RightMirrored:
+               transform = CGAffineTransform.Translate (transform, image.Size.Height, 0);
+               transform = CGAffineTransform.Scale (transform, -1, 1);
+               break;
+            case UIImageOrientation.Up:
+            case UIImageOrientation.Down:
+            case UIImageOrientation.Left:
+            case UIImageOrientation.Right:
+               break;
+         }
+
+         using (CGBitmapContext ctx = new CGBitmapContext (null, (nint)image.Size.Width, (nint)image.Size.Height, (nint)image.CGImage.BitsPerComponent, (nint)0, 
+                                         image.CGImage.ColorSpace, image.CGImage.BitmapInfo))
+         {
+            ctx.ConcatCTM (transform);
+            switch (image.Orientation)
+            {
+               case UIImageOrientation.Left:
+               case UIImageOrientation.LeftMirrored:
+               case UIImageOrientation.Right:
+               case UIImageOrientation.RightMirrored:
+                  ctx.DrawImage (new CGRect (0, 0, image.Size.Height, image.Size.Width), image.CGImage);
+                  break;
+               default:
+                  ctx.DrawImage (new CGRect (0, 0, image.Size.Width, image.Size.Height), image.CGImage);
+                  break;
+            }
+
+            using (var cgImage = ctx.ToImage ())
+            {
+               return new UIImage (cgImage);
+            }
+         }
       }
    }
 }

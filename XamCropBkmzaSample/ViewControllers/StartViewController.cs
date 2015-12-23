@@ -30,7 +30,7 @@ namespace XamCropBkmzaSample.ViewControllers
             TintColor = UIColor.Black
          };
          _takePictureButton.SetTitle ("Take Picture", UIControlState.Normal);
-         _takePictureButton.Layer.CornerRadius = 5;
+         _takePictureButton.Layer.CornerRadius = 10;
          View.Add (_takePictureButton);
 
          _takePictureButton.AddGestureRecognizer (new UITapGestureRecognizer (() =>
@@ -38,11 +38,6 @@ namespace XamCropBkmzaSample.ViewControllers
             Camera.TakePicture (new WeakReference (this), (info) =>
             {
                UIImage initialImage = info.ValueForKey (UIImagePickerController.OriginalImage) as UIImage;
-//               NSData data = initialImage.AsPNG ();
-//               UIImage tempImage = new UIImage (data);
-//               UIImage fixedOrientationImage = new UIImage (tempImage.CGImage, initialImage.CurrentScale, initialImage.Orientation);
-//               initialImage = fixedOrientationImage;
-
                NSData imageData = initialImage.AsJPEG ();
                string encodedImage = imageData.GetBase64EncodedData (NSDataBase64EncodingOptions.None).ToString ();
 

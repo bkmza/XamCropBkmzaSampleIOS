@@ -244,6 +244,23 @@ namespace XamCropBkmzaSample
 
          return outputImage;
       }
+
+      public static CGSize ScreenSize(this UIImage image)
+      {
+         var scale = image.Size.Width / UIScreen.MainScreen.Bounds.Width;
+         var width = image.Size.Width / scale;
+         var height = image.Size.Height / scale;
+
+         if (height > UIScreen.MainScreen.Bounds.Height)
+         {
+            const int tabBarHeight = 49;
+            scale = image.Size.Height / (UIScreen.MainScreen.Bounds.Height - tabBarHeight);
+            width = image.Size.Width / scale;
+            height = image.Size.Height / scale;
+         }
+
+         return new CGSize (width, height);
+      }
    }
 }
 

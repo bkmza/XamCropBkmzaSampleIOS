@@ -1,12 +1,12 @@
 ﻿using System;
-using UIKit;
 using System.Collections.Generic;
-using CoreGraphics;
 using System.Linq;
 using CoreAnimation;
-using XamCropBkmzaSample.ViewControllers;
+using CoreGraphics;
 using CoreImage;
 using Foundation;
+using UIKit;
+using XamCropBkmzaSample.ViewControllers;
 
 namespace XamCropBkmzaSample
 {
@@ -100,16 +100,16 @@ namespace XamCropBkmzaSample
       CGPoint ConvertScreenToImageCoords (CGPoint point)
       {
          var cgPoint = new CGPoint (
-                          point.Y * _scale,
-                          /*_parent.ImageView.Image.Size.Height - */(point.X * _scale));
-         return new CGPoint (cgPoint.X, cgPoint.Y);
+                          point.X * _scale,
+                          _parent.ImageView.Image.Size.Height - (point.Y * _scale));
+         return cgPoint;
       }
 
       CGPoint ConvertImageToScreenCoords (CGPoint point)
       {
          var cgPoint = new CGPoint (
-                          point.Y / _scale,
-            /*_parent.ImageView.Frame.Height - */(point.X / _scale));
+                          point.X / _scale,
+                          _parent.ImageView.Frame.Height - (point.Y / _scale));
          return cgPoint;
       }
 
@@ -139,12 +139,7 @@ namespace XamCropBkmzaSample
                      {
                         NSData imageData = convertedUIImage.AsJPEG ();
                         _encodedImage = imageData.GetBase64EncodedData (NSDataBase64EncodingOptions.None).ToString ();
-
                         _parent.ShowViewController (new BPreviewController (encodedImage: _encodedImage), this);
-
-//                        _parent.ImageView.Image = convertedUIImage;
-//                        var scaleW = convertedUIImage.Size.Width / UIScreen.MainScreen.Bounds.Width;
-//                        _parent.ImageView.Frame = new CGRect (0, 0, convertedUIImage.Size.Width / scaleW, convertedUIImage.Size.Height / scaleW);
                      }
                   }
                }
@@ -166,13 +161,13 @@ namespace XamCropBkmzaSample
 
          detector = CIDetector.CreateRectangleDetector (context: null, detectorOptions: options);
 
-         using (CIImage ciImage = new CIImage (_parent.GetStrippedExifImage ()))
+         using (CIImage ciImage = new CIImage (_parent.ImageView.Image))
          {
             InvokeOnMainThread (() =>
             {
                using (var dict = new NSMutableDictionary ())
                {
-                  var orient = GetExifOrientation (_parent.GetStrippedExifImage ());
+                  var orient = GetExifOrientation (_parent.ImageView.Image);
                   var rectangles = detector.FeaturesInImage (ciImage, orient);
                   if (rectangles.Length > 0)
                   {
@@ -190,10 +185,7 @@ namespace XamCropBkmzaSample
 
       CIImageOrientation GetExifOrientation (UIImage image)
       {
-//         return CIImageOrientation.TopLeft;
-
-         // for other cases
-         CIImageOrientation orientation = CIImageOrientation.TopLeft;
+         CIImageOrientation orientation;
          switch (image.Orientation)
          {
             case UIImageOrientation.Up:
@@ -221,7 +213,7 @@ namespace XamCropBkmzaSample
                orientation = CIImageOrientation.RightBottom;
                break;
             default:
-               break;
+               throw new NotImplementedException ();
          }
          return orientation;
       }

@@ -46,10 +46,7 @@ namespace XamCropBkmzaSample
                break;
          }
 
-         image = new UIImage (image.CGImage, 1, UIImageOrientation.Right);
-         var scale = image.Size.Width / UIScreen.MainScreen.Bounds.Width;
-
-         _previewImageView = new UIImageView (new CGRect (0, 0, image.Size.Width / scale, image.Size.Height / scale)) {
+         _previewImageView = new UIImageView (new CGRect (new CGPoint (0, 0), image.ScreenSize ())) {
             ContentMode = UIViewContentMode.ScaleAspectFit,
             Image = image
          };
